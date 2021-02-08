@@ -3,9 +3,9 @@ resources:
     type: GitRepo
     configuration:
       # SCM integration where the repository is located
-      gitProvider: {{ Values.myRepo.gitProvider }}
+      gitProvider: GITHUB
       # Repository path, including org name/repo name
-      path: {{ Values.myRepo.path }} #manishas-jfrog/jfrog-pipelines-hello-world    # replace with your repository name
+      path: srimanpadmanaban/springtest #manishas-jfrog/jfrog-pipelines-hello-world    # replace with your repository name
       branches:
         # Specifies which branches will trigger dependent steps
         include: master
