@@ -2,7 +2,7 @@ template: true   # required for local templates
 valuesFilePath: ./values.yml
 
 resources:
-  - name: myFirstRepo1
+  - name: myFirstRepos
     type: GitRepo
     configuration:
       # SCM integration where the repository is located
@@ -13,7 +13,7 @@ resources:
         # Specifies which branches will trigger dependent steps
         include: master
 
-  - name: myPropertyBag
+  - name: myPropertyBags
     type: PropertyBag
     configuration:
       commitSha: 1
@@ -27,7 +27,7 @@ pipelines:
         configuration:
           inputResources:
             # Sets up step to be triggered when there are commit events to myFirstRepo
-            - name: myFirstRepo1
+            - name: myFirstRepos
         execution:
           onExecute:
             # Data from input resources is available as env variables in the step
@@ -57,7 +57,7 @@ pipelines:
           inputSteps:
             - name: p1_s2
           outputResources:
-            - name: myPropertyBag
+            - name: myPropertyBags
         execution:
           onExecute:
             - echo $current_runid
@@ -75,7 +75,7 @@ pipelines:
         configuration:
           inputResources:
             # Sets up step to be triggered when myPropertyBag is updated
-            - name: myPropertyBag
+            - name: myPropertyBags
         execution:
           onExecute:
             # Retrieves the commitSha from input resource
