@@ -1,22 +1,24 @@
+template: true   # required for local templates
+valuesFilePath: ./values.yml
+
 resources:
   - name: myFirstRepo
     type: GitRepo
     configuration:
       # SCM integration where the repository is located
-      gitProvider: GITHUB
+      gitProvider: {{ .Values.myRepo.gitProvider }} # this will be replaced from values.yml
       # Repository path, including org name/repo name
-      path: srimanpadmanaban/springtest #manishas-jfrog/jfrog-pipelines-hello-world    # replace with your repository name
+      path: {{ .Values.myRepo.path }} # this will be replaced from values.yml
       branches:
         # Specifies which branches will trigger dependent steps
         include: master
-        
+
   - name: myPropertyBag
     type: PropertyBag
     configuration:
       commitSha: 1
-      runID: 1 
-      
-      
+      runID: 1
+
 pipelines:
   - name: my_first_pipeline
     steps:
@@ -38,7 +40,7 @@ pipelines:
             # So this will be empty during first run and will be set to prior run number in subsequent runs
             # Pipeline state documentation: https://www.jfrog.com/confluence/display/JFROG/Creating+Stateful+Pipelines#CreatingStatefulPipelines-PipelineState
             - echo "Previous run ID is $prev_runid"
- 
+
       - name: p1_s2
         type: Bash
         configuration:
@@ -48,7 +50,7 @@ pipelines:
           onExecute:
             # Demonstrates the availability of an env variable written to run state during p1_s1
             - echo $current_runid
- 
+
       - name: p1_s3
         type: Bash
         configuration:
@@ -65,7 +67,7 @@ pipelines:
             # Dependent pipelines can be configured to trigger when this resource is updated
             # Utility functions documentation: https://www.jfrog.com/confluence/display/JFROG/Pipelines+Utility+Functions
             - write_output myPropertyBag commitSha=$commitSha runID=$current_runid
- 
+
   - name: my_second_pipeline
     steps:
       - name: p2_s1
