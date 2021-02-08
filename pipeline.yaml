@@ -1,0 +1,221 @@
+version: 2.1
+
+parameters:
+  release_force_build:
+    type: boolean
+    default: false
+  release_applications:
+    type: string
+    default: "release"
+steps:
+  - print:
+    message: Printing << parameters.release_applications >>
+    
+jobs:
+  build_image1:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference     
+    steps:
+      - checkout
+      - run: ./mvnw -Dmaven.test.skip=true package
+      - persist_to_workspace:
+         root: ./
+         paths:
+           - target/
+
+  test_image1:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+    
+    working_directory: /tmp
+    steps:
+      - run:
+          name: Creating Dummy Artifacts
+          command: |
+            echo "{\"env\":\"dev\"}" > /tmp/artifact-1;
+            mkdir /tmp/artifacts;
+            echo "my artifact files in a dir" > /tmp/artifacts/artifact-2;
+      - store_artifacts:
+          path: /tmp/artifact-1
+          destination: artifact-file
+          
+  publish_image1:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference     
+    steps:
+      - checkout
+      - run: ./mvnw -Dmaven.test.skip=true package
+      - persist_to_workspace:
+         root: ./
+         paths:
+           - target/
+           
+  build_image2:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference     
+    steps:
+      - checkout
+      - run: ./mvnw -Dmaven.test.skip=true package
+      - persist_to_workspace:
+         root: ./
+         paths:
+           - target/
+           
+  test_image2:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference     
+    steps:
+      - checkout
+      - run: ./mvnw -Dmaven.test.skip=true package
+      - persist_to_workspace:
+         root: ./
+         paths:
+           - target/
+           
+  publish_image2:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference     
+    steps:
+      - checkout
+      - run: ./mvnw -Dmaven.test.skip=true package
+      - persist_to_workspace:
+         root: ./
+         paths:
+           - target/
+  build_image3:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference     
+    steps:
+      - checkout
+      - run: ./mvnw -Dmaven.test.skip=true package
+      - persist_to_workspace:
+         root: ./
+         paths:
+           - target/
+  test_image3:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference     
+    steps:
+      - checkout
+      - run: ./mvnw -Dmaven.test.skip=true package
+      - persist_to_workspace:
+         root: ./
+         paths:
+           - target/
+  publish_image3:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference     
+    steps:
+      - checkout
+      - run: ./mvnw -Dmaven.test.skip=true package
+      - persist_to_workspace:
+         root: ./
+         paths:
+           - target/
+  build_image4:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference     
+    steps:
+      - checkout
+      - run: ./mvnw -Dmaven.test.skip=true package
+      - persist_to_workspace:
+         root: ./
+         paths:
+           - target/
+  test_image4:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference     
+    steps:
+      - checkout
+      - run: ./mvnw -Dmaven.test.skip=true package
+      - persist_to_workspace:
+         root: ./
+         paths:
+           - target/
+  publish_image4:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference     
+    steps:
+      - checkout
+      - run: ./mvnw -Dmaven.test.skip=true package
+      - persist_to_workspace:
+         root: ./
+         paths:
+           - target/
+           
+workflows:
+  version: 2
+
+  build-then-test:
+    when: << pipeline.parameters.release_force_build >>
+    jobs:
+      - build_image1
+      - test_image1:
+          requires:
+            - build_image1
+      - publish_image1:
+          requires:
+            - test_image1
+      - build_image2:
+          requires:
+            - publish_image1
+      - test_image2:
+          requires:
+            - build_image2
+      - publish_image2:
+          requires:
+            - test_image2
+      - build_image3:
+          requires:
+            - publish_image2
+      - test_image3:
+          requires:
+            - build_image3
+      - publish_image3:
+          requires:
+            - test_image3
+      - build_image4:
+          requires:
+            - publish_image3
+      - test_image4:
+          requires:
+            - build_image4
+      - publish_image4:
+          requires:
+            - test_image4
