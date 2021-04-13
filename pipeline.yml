@@ -10,6 +10,8 @@ resources:
 pipelines:
   - name: pipeline_affinityGroup_example
     configuration:
+      inputResources:
+        - name: my_source_repo
       environmentVariables:
         readOnly:
           MY_DIR: "/tmpdir"
