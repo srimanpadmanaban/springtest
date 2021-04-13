@@ -1,3 +1,17 @@
+resources:
+  - name: my_source_repo
+    type: GitRepo
+    configuration:
+      gitProvider: myGitHub
+      path: srimanpadmanaban/springtest
+      branches:
+        include: master
+      buildOn:
+        commit: true
+        pullRequestCreate: true
+      cancelPendingRunsOn:
+        pullRequestUpdate: true
+        
 pipelines:
   - name: pipeline_affinityGroup_example
     configuration:
