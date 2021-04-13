@@ -2,7 +2,7 @@ resources:
   - name: my_source_repo
     type: GitRepo
     configuration:
-      gitProvider: myGitHub
+      gitProvider: sriman
       path: srimanpadmanaban/springtest
       branches:
         include: master
