@@ -10,8 +10,6 @@ resources:
 pipelines:
   - name: pipeline_affinityGroup_example
     configuration:
-      inputResources:
-        - name: my_source_repo
       environmentVariables:
         readOnly:
           MY_DIR: "/tmpdir"
@@ -19,6 +17,8 @@ pipelines:
       - name: ag_step_1
         type: Bash
         configuration:
+          inputResources:
+            - name: my_source_repo
           affinityGroup: together
         execution:
           onExecute:
